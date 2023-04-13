@@ -25,9 +25,8 @@ const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
       setTitle(item.title);
       setNote(item.noteDesc);
     }
-  },[])
+  },[isEdit])
   const handleModalClose = () => {
-    console.log("keyboard");
     Keyboard.dismiss();
   };
 
@@ -37,16 +36,18 @@ const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
       return onClose();
     } else {
         onSubmit(title,note);
-      setTitle("");
-      setNote("");
       onClose();
     }
   };
   
    
   const closeModal = () => {
-    setTitle("");
-     setNote("");
+    if(!isEdit)
+    {
+      setTitle("");
+      setNote("");
+    }
+    
     onClose();
   };
   return (

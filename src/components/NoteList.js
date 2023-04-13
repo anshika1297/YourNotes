@@ -3,7 +3,7 @@ import React from 'react';
 import SingleNote from './SingleNote';
 const { width } = Dimensions.get("window");
 
-const NoteList = ({notesData}) => {
+const NoteList = ({notesData, userName, setNotesData}) => {
   return (
     <SafeAreaView style={{
     paddingHorizontal:5,
@@ -12,7 +12,7 @@ const NoteList = ({notesData}) => {
     }}>
        <FlatList
         data={notesData}
-        renderItem={({item}) => <SingleNote item={item}/>}
+        renderItem={({item}) => <SingleNote item={item} userName={userName} setNotesData={setNotesData} />}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
         

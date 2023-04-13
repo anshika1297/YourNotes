@@ -57,6 +57,7 @@ const NoteScreen = ({ user }) => {
             "noteDesc":note,
             "time":new Date().toLocaleTimeString(),
             "date":new Date().toLocaleDateString(),
+            "isUpdated":false,
         }
 
       const updatedNotes=[...notesData,userData]
@@ -110,7 +111,7 @@ const NoteScreen = ({ user }) => {
           <View style={styles.emptyContainer}>
           <Text style={{color:"#7D93AE", fontSize:17, padding:15}}>Something on Your Mind?</Text>
           <Text style={{fontWeight:"bold", color:"#7D93AE",fontSize:25}}>ADD NOTES</Text>
-        </View>:<ScrollView><NoteList notesData={notesData}/></ScrollView>
+        </View>:<ScrollView><NoteList notesData={notesData} userName={user.userName} setNotesData={setNotesData}/></ScrollView>
         }
         < TouchableOpacity style={[styles.button,{position:"absolute", alignSelf:"baseline",zIndex:1, right:15,bottom:120}]} >
         <FontAwesome name="pencil" size={30} color="white" onPress={()=>setModal(true)} />

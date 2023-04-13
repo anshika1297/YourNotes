@@ -3,7 +3,7 @@ import React from 'react';
 import NoteDetail from './NoteDetail';
 const { width } = Dimensions.get("window");
 
-const SingleNote = ({item}) => {
+const SingleNote = ({item, userName, setNotesData}) => {
   
   const [openEdit, setOpenEdit]=React.useState(false);
   return (
@@ -23,7 +23,7 @@ const SingleNote = ({item}) => {
       <Text style={{fontSize:12, color:"#7D93AE"}}>{item.time}</Text>
       </View>
       </View>
-      <NoteDetail visible={openEdit} item={item} onClose={()=>setOpenEdit(false)}/>
+      <NoteDetail visible={openEdit} item={item} onClose={()=>setOpenEdit(false)} userName={userName} setNotesData={setNotesData}/>
     </SafeAreaView>
     
   )

@@ -10,20 +10,60 @@ import {
   Dimensions,
   ScrollView,
   ImageBackground,
+  Alert 
 } from "react-native";
 import React from "react";
-import { AntDesign, FontAwesome, MaterialIcons, Alert } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons} from "@expo/vector-icons";
 import NoteInput from "./NoteInput";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const NoteDetail = ({ item, visible, onClose }) => {
+const NoteDetail = ({ item, visible, onClose,userName, setNotesData }) => {
   const [modal, setModal] = React.useState(false);
+  const [isEdit, setEdit] =React.useState(false);
 
-  const handleDelete=()=>{
-    console.log("Delete Note");
-Alert.alert("Are you Sure?", "This Action Will Delete your Note Permanently.",[
+  const onUpdate = async (title,note) => {
+    const getUserNotes = await AsyncStorage.getItem("user"+userName);
+    let notes=[]
+    if(getUserNotes!==null)
+       notes=JSON.parse(getUserNotes);
+       const updatedNotes= notes.filter(n=>
+        {
+          if(item.id===n.id)
+          {
+            n.title=title,
+            n.noteDesc=note,
+            n.time=new Date().toLocaleTimeString(),
+            n.date=new Date().toLocaleDateString(),
+            n.isUpdate=true;
+          }
+          return n;
+    })
+
+    await AsyncStorage.setItem("user"+userName, JSON.stringify(updatedNotes));
+    setNotesData(updatedNotes);
+};
+
+  const deleteNote=async()=>{
+    try {
+      const getUserNotes = await AsyncStorage.getItem("user"+userName);
+      let notes=[]
+      if(getUserNotes!==null)
+    notes=JSON.parse(getUserNotes);
+    console.log(notes);
+
+   const updatedNotes= notes.filter(n=>item.id!==n.id )
+   await AsyncStorage.setItem("user"+userName, JSON.stringify(updatedNotes));
+   setNotesData(updatedNotes);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleDelete = () => {
+   Alert.alert("Are you Sure?", "This Action Will Delete your Note Permanently.",[
   {
     text:'Delete',
-    onPress:()=>{console.log("Deleted")}
+    onPress:deleteNote
   },
   {
     text:'Cancel',
@@ -94,12 +134,13 @@ Alert.alert("Are you Sure?", "This Action Will Delete your Note Permanently.",[
               bottom: 190,
             },
           ]}
+          onPress={() => setModal(true)}
         >
           <FontAwesome
             name="pencil-square-o"
             size={30}
             color="black"
-            onPress={() => setModal(true)}
+           
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -114,8 +155,9 @@ Alert.alert("Are you Sure?", "This Action Will Delete your Note Permanently.",[
               bottom: 120,
             },
           ]}
+          onPress={handleDelete}
         >
-          <MaterialIcons name="delete" size={30} color="black" onPress={() => handleDelete} />
+          <MaterialIcons name="delete" size={30} color="black"  />
         </TouchableOpacity>
       </ImageBackground>
       <NoteInput
@@ -123,6 +165,7 @@ Alert.alert("Are you Sure?", "This Action Will Delete your Note Permanently.",[
         item={item}
         isEdit={true}
         onClose={() => setModal(false)}
+        onSubmit={onUpdate}
       />
     </Modal>
   );
