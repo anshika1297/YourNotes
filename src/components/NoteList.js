@@ -6,7 +6,7 @@ const { width } = Dimensions.get("window");
 const NoteList = ({notesData}) => {
   return (
     <SafeAreaView style={{
-    paddingRight:10,
+    paddingHorizontal:5,
       paddingVertical:30,
       
     }}>

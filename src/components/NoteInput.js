@@ -12,12 +12,20 @@ import {
 } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const NoteInput = ({ visible, onClose, onSubmit}) => {
+
+const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
   const [title, setTitle] = React.useState("");
   const [note, setNote] = React.useState("");
 
+
+  React.useEffect(()=>{
+    if(isEdit)
+    {
+      setTitle(item.title);
+      setNote(item.noteDesc);
+    }
+  },[])
   const handleModalClose = () => {
     console.log("keyboard");
     Keyboard.dismiss();

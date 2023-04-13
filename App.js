@@ -9,8 +9,8 @@ import NoteScreen from './src/Screens/NoteScreen';
 export default function App() {
   const [user, setUser]=useState([]);
 const FindUser=async()=>{
-  const user= await AsyncStorage.getItem('user')||[];
-  setUser(JSON.parse(user));
+  const userData= await AsyncStorage.getItem('user')||[];
+  setUser(JSON.parse(userData));
  
 }
 

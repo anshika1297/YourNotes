@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
+  ScrollView
 } from "react-native";
 import React from "react";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ const NoteScreen = ({ user }) => {
   const [search, setSearch] = useState("");
   const [modal, setModal]=useState(false);
   const [notesData, setNotesData]=useState([]);
+  
 
   const greetTime = () => {
     const hour = new Date().getHours();
@@ -63,11 +65,14 @@ const NoteScreen = ({ user }) => {
   };
 
  const getNotes=async()=>{
-  const getUserNotes = await AsyncStorage.getItem("user"+user.userName)||[];
-  if(getUserNotes!==null)
+   try {
+    const getUserNotes = await AsyncStorage.getItem("user"+user.userName)||[];
+    if(getUserNotes!==null)
   setNotesData(JSON.parse(getUserNotes));
   console.log(notesData);
-  
+  } catch (e) {
+    console.log(e);
+  }
  }
 
   useEffect(() => {
@@ -76,6 +81,7 @@ const NoteScreen = ({ user }) => {
     
   },[]);
   return (
+    
     <ImageBackground
       source={{ uri: bgUrl }}
       style={{ width: width, height: "100%" }}
@@ -104,18 +110,15 @@ const NoteScreen = ({ user }) => {
           <View style={styles.emptyContainer}>
           <Text style={{color:"#7D93AE", fontSize:17, padding:15}}>Something on Your Mind?</Text>
           <Text style={{fontWeight:"bold", color:"#7D93AE",fontSize:25}}>ADD NOTES</Text>
-         < TouchableOpacity style={styles.button} >
-         <FontAwesome name="pencil-square-o" size={35} color="white" onPress={()=>setModal(true)} />
-                
-                </TouchableOpacity>
-        </View>:<View><NoteList notesData={notesData}/>< TouchableOpacity style={[styles.button,{position:"absolute",zIndex:-1, right:15,top:400}]} >
-        <FontAwesome name="pencil" size={30} color="white" onPress={()=>setModal(true)} />
-                </TouchableOpacity></View>
+        </View>:<ScrollView><NoteList notesData={notesData}/></ScrollView>
         }
-        
+        < TouchableOpacity style={[styles.button,{position:"absolute", alignSelf:"baseline",zIndex:1, right:15,bottom:120}]} >
+        <FontAwesome name="pencil" size={30} color="white" onPress={()=>setModal(true)} />
+                </TouchableOpacity>
        <NoteInput visible={modal}  onClose={()=>setModal(false)} onSubmit={onSubmit}/>
       </SafeAreaView>
     </ImageBackground>
+    
   );
 };
 
