@@ -15,7 +15,7 @@ const NoteList = ({notesData, userName, setNotesData}) => {
         renderItem={({item}) => <SingleNote item={item} userName={userName} setNotesData={setNotesData} />}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
-        
+        scrollEnabled={false}
       />
     </SafeAreaView>
   )

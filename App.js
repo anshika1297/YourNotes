@@ -7,21 +7,25 @@ import Intro from './src/Screens/Intro';
 import NoteScreen from './src/Screens/NoteScreen';
 
 export default function App() {
-  const [user, setUser]=useState([]);
+  const [user, setUser]=useState({});
+  const [isOpenFirst, setIsOpenFirst]=useState(false);
 const FindUser=async()=>{
-  const userData= await AsyncStorage.getItem('user')||[];
+  const userData= await AsyncStorage.getItem('user');
+  if(userData==null) return setIsOpenFirst(true);
   setUser(JSON.parse(userData));
- 
+  setIsOpenFirst(false);
 }
 
 useEffect(()=>{
  FindUser();
 
 },[])
+
+if(isOpenFirst) return <View><Intro onfinish={FindUser}/><StatusBar style="auto" backgroundColor='#182746' /></View>;
   return (
     <View style={styles.container}>
       
-      {user?<NoteScreen user={user}/>:<Intro onfinish={FindUser}/>}
+      <NoteScreen user={user}/>
       
     
       <StatusBar style="auto" backgroundColor='#182746' />

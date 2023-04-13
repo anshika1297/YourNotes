@@ -23,9 +23,10 @@ const NoteScreen = ({ user }) => {
   const [search, setSearch] = useState("");
   const [modal, setModal]=useState(false);
   const [notesData, setNotesData]=useState([]);
-  
+  const [noSearch, setnoSearch]=useState(false);
 
   const greetTime = () => {
+    getNotes();
     const hour = new Date().getHours();
 
     if (hour >= 0 && hour < 12) {
@@ -46,7 +47,7 @@ const NoteScreen = ({ user }) => {
         "https://i.pinimg.com/736x/e0/a5/30/e0a530fb4ece2174390452ec2e59360b--twitter-backgrounds-cool-backgrounds.jpg"
       );
     }
-    getNotes();
+ 
   };
 
   const onSubmit = async (title,note) => {
@@ -64,6 +65,22 @@ const NoteScreen = ({ user }) => {
     await AsyncStorage.setItem("user"+user.userName, JSON.stringify(updatedNotes));
     setNotesData(updatedNotes);
   };
+
+  const handleOnSearch=(e)=>
+  {
+    setnoSearch(false);
+    setSearch(e);
+    if(e.length===0)
+    {
+      getNotes();
+    }
+   const searchNote= notesData.filter(note=>{
+      if(note.title.toLowerCase().includes(e.toLowerCase()))
+      return note
+    })
+
+    searchNote.length>0?setNotesData([...searchNote]):setnoSearch(true);
+  }
 
  const getNotes=async()=>{
    try {
@@ -93,27 +110,39 @@ const NoteScreen = ({ user }) => {
             placeholder="Search your Notes by Title...."
             placeholderTextColor="#ECECEC"
             value={search}
-            onChangeText={(e) => setSearch(e)}
+            onChangeText={handleOnSearch}
             style={styles.inputBox}
           />
-          <AntDesign
+         {search.length>0?<TouchableOpacity onPress={()=>{setSearch("");setnoSearch(false); getNotes();}}><AntDesign
+            name="close"
+            size={22}
+            color="#ECECEC" onp
+            style={{ marginTop: 13 }}
+          /></TouchableOpacity>:<AntDesign
             name="search1"
             size={22}
             color="#ECECEC"
             style={{ marginTop: 13 }}
-          />
+          />}
         </View>
         <Text style={styles.GreetText}>
           Hey {user.name}, Good {greeting}!
         </Text>
         {
-          notesData.length===0?
-          <View style={styles.emptyContainer}>
-          <Text style={{color:"#7D93AE", fontSize:17, padding:15}}>Something on Your Mind?</Text>
-          <Text style={{fontWeight:"bold", color:"#7D93AE",fontSize:25}}>ADD NOTES</Text>
-        </View>:<ScrollView><NoteList notesData={notesData} userName={user.userName} setNotesData={setNotesData}/></ScrollView>
+          noSearch===true?<View style={styles.emptyContainer}><AntDesign name="frowno" size={150} color="#7D93AE" />
+          <Text style={{color:"#7D93AE", fontWeight:"bold", fontSize:23, padding:15}}>OOPS! No Results Found</Text>
+          <Text style={{fontWeight:"bold", color:"#7D93AE",fontSize:17}}>Try A New Search</Text></View>: 
+          <ScrollView>{
+            notesData.length===0?
+            <View style={styles.emptyContainer}>
+            <Text style={{color:"#7D93AE", fontSize:17, paddingTop:200, padding:15}}>Something on Your Mind?</Text>
+            <Text style={{fontWeight:"bold", color:"#7D93AE",fontSize:25}}>ADD NOTES</Text>
+          </View>:<ScrollView><NoteList notesData={notesData} userName={user.userName} setNotesData={setNotesData}/></ScrollView>
+          }
+          </ScrollView>
         }
-        < TouchableOpacity style={[styles.button,{position:"absolute", alignSelf:"baseline",zIndex:1, right:15,bottom:120}]} >
+       
+        < TouchableOpacity style={[styles.button,{position:"absolute", alignSelf:"baseline",zIndex:1, right:15,bottom:100}]} >
         <FontAwesome name="pencil" size={30} color="white" onPress={()=>setModal(true)} />
                 </TouchableOpacity>
        <NoteInput visible={modal}  onClose={()=>setModal(false)} onSubmit={onSubmit}/>
@@ -149,7 +178,8 @@ const styles = StyleSheet.create({
     color:"#D2796C",
   },
   emptyContainer:{
-    flex:1, alignItems:"center", justifyContent:"center"
+    flex:1, alignItems:"center", justifyContent:"center",
+    alignSelf:"center"
   },
   button: {
     width: 60,

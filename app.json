@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "YourNotes",
-    "slug": "YourNotes",
+    "name": "Note It Down",
+    "slug": "Note It Down",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

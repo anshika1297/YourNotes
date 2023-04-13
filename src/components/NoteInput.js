@@ -36,6 +36,11 @@ const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
       return onClose();
     } else {
         onSubmit(title,note);
+        if(!isEdit)
+        {
+          setNote("");
+          setTitle("");
+        }
       onClose();
     }
   };
