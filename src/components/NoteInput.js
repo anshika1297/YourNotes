@@ -13,19 +13,16 @@ import {
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 
-
-const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
+const NoteInput = ({ visible, item, isEdit, onClose, onSubmit }) => {
   const [title, setTitle] = React.useState("");
   const [note, setNote] = React.useState("");
 
-
-  React.useEffect(()=>{
-    if(isEdit)
-    {
+  React.useEffect(() => {
+    if (isEdit) {
       setTitle(item.title);
       setNote(item.noteDesc);
     }
-  },[isEdit])
+  }, [isEdit]);
   const handleModalClose = () => {
     Keyboard.dismiss();
   };
@@ -35,81 +32,78 @@ const NoteInput = ({ visible, item, isEdit, onClose, onSubmit}) => {
       setNote("");
       return onClose();
     } else {
-        onSubmit(title,note);
-        if(!isEdit)
-        {
-          setNote("");
-          setTitle("");
-        }
+      onSubmit(title, note);
+      if (!isEdit) {
+        setNote("");
+        setTitle("");
+      }
       onClose();
     }
   };
-  
-   
+
   const closeModal = () => {
-    if(!isEdit)
-    {
+    if (!isEdit) {
       setTitle("");
       setNote("");
     }
-    
+
     onClose();
   };
   return (
     <Modal visible={visible} animationType="slide">
-      <View style={{flex:1,alignItems:"center", justifyContent:"center"}}>
-
-      <View style={styles.InputView}>
-        <Text
-          style={{
-            fontSize: 17,
-            marginTop: 20,
-            fontStyle: "italic",
-
-            alignSelf: "center",
-            color: "#7D93AE",
-          }}
-        >
-          Create New Note
-        </Text>
-        <TextInput
-          placeholder="Enter the Title...."
-          placeholderTextColor="#7D93AE"
-          value={title}
-          onChangeText={(e) => setTitle(e)}
-          style={styles.inputBox}
-        />
-        <TextInput
-          placeholder="Write Here...."
-          placeholderTextColor="#7D93AE"
-          multiline
-          value={note}
-          onChangeText={(e) => setNote(e)}
-          style={[styles.inputBox, { height: 150 }]}
-        />
-        <Text style={{ color: "#7D93AE", alignSelf: "center", opacity: 0.5 }}>
-          Minimum 10 characters Required
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          {note.length > 10 ? (
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <AntDesign name="check" size={30} color="white" />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <View style={styles.InputView}>
+          <Text
+            style={{
+              fontSize: 17,
+              marginTop: 20,
+              fontStyle: "italic",
+              alignSelf: "center",
+              color: "#7D93AE",
+            }}
+          >
+            Create New Note
+          </Text>
+          <TextInput
+            placeholder="Enter the Title...."
+            placeholderTextColor="#7D93AE"
+            value={title}
+            onChangeText={(e) => setTitle(e)}
+            style={styles.inputBox}
+          />
+          <TextInput
+            placeholder="Write Here...."
+            placeholderTextColor="#7D93AE"
+            multiline
+            value={note}
+            onChangeText={(e) => setNote(e)}
+            style={[styles.inputBox, { height: 150 }]}
+          />
+          <Text style={{ color: "#7D93AE", alignSelf: "center", opacity: 0.5 }}>
+            Minimum 10 characters Required
+          </Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            {note.length > 10 ? (
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <AntDesign name="check" size={30} color="white" />
+              </TouchableOpacity>
+            ) : null}
+            <TouchableOpacity style={styles.button}>
+              <AntDesign
+                name="close"
+                size={30}
+                color="white"
+                onPress={closeModal}
+              />
             </TouchableOpacity>
-          ) : null}
-          <TouchableOpacity style={styles.button}>
-            <AntDesign
-              name="close"
-              size={30}
-              color="white"
-              onPress={closeModal}
-            />
-          </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <TouchableWithoutFeedback onPress={handleModalClose}>
-        <View style={[StyleSheet.absoluteFillObject, styles.bgModal]}></View>
-      </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handleModalClose}>
+          <View style={[StyleSheet.absoluteFillObject, styles.bgModal]}></View>
+        </TouchableWithoutFeedback>
       </View>
     </Modal>
   );

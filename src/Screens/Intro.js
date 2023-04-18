@@ -12,23 +12,24 @@ import {
   ImageBackground,
 } from "react-native";
 import React from "react";
-import { AntDesign } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
-const Intro = ({onfinish}) => {
+const Intro = ({ onfinish }) => {
   const [name, setName] = useState("");
   const [userName, setuserName] = useState("");
 
-  const handleContinue=async()=>{
-    const getUserList= JSON.parse( await AsyncStorage.getItem('userNames'))||[];
-    getUserList.includes(userName)?getUserList:getUserList.push(userName);
-    await AsyncStorage.setItem('userNames', JSON.stringify(getUserList));
+  const handleContinue = async () => {
+    const getUserList =
+      JSON.parse(await AsyncStorage.getItem("userNames")) || [];
+    getUserList.includes(userName) ? getUserList : getUserList.push(userName);
+    await AsyncStorage.setItem("userNames", JSON.stringify(getUserList));
 
-    const User={ "name":name, "userName":userName };
-   await AsyncStorage.setItem('user', JSON.stringify(User));
-   if(onfinish) onfinish();
-  }
+    const User = { name: name, userName: userName };
+    await AsyncStorage.setItem("user", JSON.stringify(User));
+    if (onfinish) onfinish();
+  };
 
   return (
     <ImageBackground
@@ -41,7 +42,7 @@ const Intro = ({onfinish}) => {
         source={require("./lineImage.png")}
         style={{ width: width, height: 300 }}
       />
-      <SafeAreaView style={{ alignItems: "center", justifyContent: "center" }}>
+      <SafeAreaView style={styles.SafeArea}>
         <TextInput
           placeholder="Hi!  Your Name Please..."
           placeholderTextColor="#ECECEC"
@@ -57,15 +58,12 @@ const Intro = ({onfinish}) => {
           onChangeText={(e) => setuserName(e)}
           style={styles.inputBox}
         />
-        
-            {
-                userName.length>5?
-                <TouchableOpacity style={styles.button} onPress={handleContinue}>
-                <AntDesign name="arrowright" size={50} color="black" />
-                </TouchableOpacity>:null
-            }
-          
-        
+
+        {userName.length > 5 ? (
+          <TouchableOpacity style={styles.button} onPress={handleContinue}>
+            <AntDesign name="arrowright" size={50} color="black" />
+          </TouchableOpacity>
+        ) : null}
       </SafeAreaView>
     </ImageBackground>
   );
@@ -74,7 +72,7 @@ const Intro = ({onfinish}) => {
 export default Intro;
 
 const styles = StyleSheet.create({
- 
+  SafeArea:{ alignItems: "center", justifyContent: "center" },
   inputBox: {
     width: 300,
     height: 50,
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     borderWidth: 1,
     alignItems: "center",
-    justifyContent:"center",
+    justifyContent: "center",
     marginTop: 50,
   },
 });
